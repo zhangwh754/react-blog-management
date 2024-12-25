@@ -1,5 +1,6 @@
 import { Breadcrumb, Layout, theme } from 'antd'
 import React from 'react'
+import { Outlet } from 'react-router-dom'
 
 const { Content } = Layout
 
@@ -24,9 +25,7 @@ const AppContent: React.FC = () => {
           borderRadius: borderRadiusLG,
         }}
       >
-        {Array.from({ length: 1000 }).map((_, index) => (
-          <div>{index}</div>
-        ))}
+        <Outlet />
       </Content>
     </Layout>
   )

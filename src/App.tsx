@@ -1,9 +1,10 @@
 import React from 'react'
+import { RouterProvider } from 'react-router-dom'
 
-import AppLayout from './layout'
+import router from './router'
 
 const App: React.FC = () => {
-  return <AppLayout />
+  return <RouterProvider router={router} fallbackElement={<div>Loading...</div>} />
 }
 
 export default App
