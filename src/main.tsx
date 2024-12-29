@@ -1,4 +1,5 @@
 import './style/index.scss'
+import './utils/omitReactRouterWarn.tsx'
 
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
