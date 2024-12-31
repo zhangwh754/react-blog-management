@@ -1,10 +1,23 @@
-import { createBrowserRouter } from 'react-router-dom'
+import { createHashRouter, Navigate, RouteObject } from 'react-router-dom'
 
 import AppLayout from '../layout'
 import Contact from '../views/Contact'
 import Home from '../views/Home'
+import Login from '../views/Login'
+import NotFound from '../views/NotFound'
 
-const router = createBrowserRouter([
+type CustomRouteObject = RouteObject & {
+  meta?: {
+    [key: string]: any
+  }
+  children?: CustomRouteObject[]
+}
+
+const routes: CustomRouteObject[] = [
+  {
+    path: '/login',
+    element: <Login />,
+  },
   {
     path: '/',
     element: <AppLayout />,
@@ -12,6 +25,11 @@ const router = createBrowserRouter([
     children: [
       {
         path: '',
+        element: <Navigate to={'/home'} />,
+        meta: {},
+      },
+      {
+        path: 'home',
         element: <Home />,
       },
       {
@@ -19,8 +37,13 @@ const router = createBrowserRouter([
         element: <Contact />,
       },
     ],
-    // element: <Home />,
   },
-])
+  {
+    path: '*',
+    element: <NotFound />,
+  },
+]
+
+const router = createHashRouter(routes)
 
 export default router
