@@ -1,7 +1,8 @@
 import { Navigate } from 'react-router-dom'
 
 import AppLayout from '../layout'
-import Contact from '../views/Contact'
+import ContactDetail from '../views/Contact/Detail'
+import ContactList from '../views/Contact/List'
 import Home from '../views/Home'
 import { CustomRouteObject } from '.'
 
@@ -18,15 +19,33 @@ const protectedRoutes: CustomRouteObject[] = [
         path: 'home',
         element: <Home />,
         meta: {
+          title: '首页',
           auth: ['admin', 'user'],
         },
       },
       {
-        path: 'contact/:userId',
-        element: <Contact />,
+        path: 'contact',
         meta: {
+          title: '联系人',
           auth: ['admin'],
         },
+        children: [
+          {
+            path: '',
+            element: <ContactList />,
+            meta: {
+              title: '联系人列表',
+              auth: ['admin'],
+            },
+          },
+          {
+            path: ':userId',
+            element: <ContactDetail />,
+            meta: {
+              auth: ['admin'],
+            },
+          },
+        ],
       },
     ],
   },
