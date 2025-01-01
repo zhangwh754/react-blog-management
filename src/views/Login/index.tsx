@@ -4,6 +4,8 @@ import { LockOutlined, UserOutlined } from '@ant-design/icons'
 import { Button, Card, Form, Input, message, Radio } from 'antd'
 import React from 'react'
 
+import { INDEX_PAGE } from '../../config'
+
 interface LoginForm {
   username: string
   password: string
@@ -20,7 +22,7 @@ const Login: React.FC = () => {
       localStorage.setItem('role', values.role)
       message.success('Login successful!')
       // Force router refresh
-      window.location.href = '/home'
+      window.location.href = INDEX_PAGE
     } catch (error) {
       message.error(error instanceof Error ? error.message : 'An error occurred')
     }
