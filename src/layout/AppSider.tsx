@@ -1,43 +1,44 @@
-import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons'
+// import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
 import { Layout, Menu, theme } from 'antd'
 import React from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
+
+import { createSideMenu } from '../router'
 
 const { Sider } = Layout
 
-const items2: MenuProps['items'] = [UserOutlined, LaptopOutlined, NotificationOutlined].map(
-  (icon, index) => {
-    const key = String(index + 1)
-
-    return {
-      key: `sub${key}`,
-      icon: React.createElement(icon),
-      label: `subnav ${key}`,
-
-      children: new Array(4).fill(null).map((_, j) => {
-        const subKey = index * 4 + j + 1
-        return {
-          key: subKey,
-          label: `option${subKey}`,
-        }
-      }),
-    }
-  }
-)
-
 const AppSider: React.FC = () => {
+  const navigate = useNavigate()
+  const location = useLocation()
+
   const {
     token: { colorBgContainer },
   } = theme.useToken()
+
+  const isAuthenticated = localStorage.getItem('token') !== null
+  const userRole = localStorage.getItem('role') as 'admin' | 'user'
+  const menus = createSideMenu(isAuthenticated, userRole) as MenuProps['items']
+
+  console.log(JSON.stringify(menus))
+
+  // Get current selected keys based on pathname
+  const selectedKeys = [location.pathname.split('/')[1] || 'home']
+  const openKeys = location.pathname.split('/').filter(Boolean)
+
+  const handleMenuClick: MenuProps['onClick'] = ({ key }) => {
+    navigate(`${key}`)
+  }
 
   return (
     <Sider width={200} style={{ background: colorBgContainer }}>
       <Menu
         mode="inline"
-        defaultSelectedKeys={['1']}
-        defaultOpenKeys={['sub1']}
+        selectedKeys={selectedKeys}
+        defaultOpenKeys={openKeys}
         style={{ height: '100%', borderRight: 0 }}
-        items={items2}
+        items={menus}
+        onClick={handleMenuClick}
       />
     </Sider>
   )

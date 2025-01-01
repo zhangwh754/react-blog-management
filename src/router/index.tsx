@@ -1,6 +1,7 @@
 import { createBrowserRouter, Navigate, RouteObject } from 'react-router-dom'
 
 import filterRouteObject from './filterRouteObject'
+import getSideMenuObject from './getSideMenuObject'
 import protectedRoutes from './route.protected'
 import publicRoutes from './route.public'
 
@@ -26,6 +27,16 @@ const createRouter = (isAuthenticated: boolean, role: 'admin' | 'user') => {
   const filteredProtectedRoutes = filterRouteObject(protectedRoutes, role)
 
   return createBrowserRouter([...filteredProtectedRoutes, ...publicRoutes])
+}
+
+export const createSideMenu = (isAuthenticated: boolean, role: 'admin' | 'user') => {
+  if (!isAuthenticated) {
+    return []
+  }
+
+  // Get the children routes from the root protected route
+  const menuRoutes = protectedRoutes[0]?.children || []
+  return getSideMenuObject(menuRoutes, role)
 }
 
 export default createRouter
