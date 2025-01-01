@@ -1,10 +1,8 @@
-import { createHashRouter, Navigate, RouteObject } from 'react-router-dom'
+import { createBrowserRouter, Navigate, RouteObject } from 'react-router-dom'
 
-import AppLayout from '../layout'
-import Contact from '../views/Contact'
-import Home from '../views/Home'
-import Login from '../views/Login'
-import NotFound from '../views/NotFound'
+import filterRouteObject from './filterRouteObject'
+import protectedRoutes from './route.protected'
+import publicRoutes from './route.public'
 
 export type CustomRouteObject = RouteObject & {
   meta?: {
@@ -13,41 +11,21 @@ export type CustomRouteObject = RouteObject & {
   children?: CustomRouteObject[]
 }
 
-export const routes: CustomRouteObject[] = [
-  {
-    path: '/login',
-    element: <Login />,
-  },
-  {
-    path: '/',
-    element: <AppLayout />,
-    children: [
+const createRouter = (isAuthenticated: boolean, role: 'admin' | 'user') => {
+  if (!isAuthenticated) {
+    return createBrowserRouter([
+      ...publicRoutes,
       {
-        path: '',
-        element: <Navigate to={'/home'} />,
+        path: '*',
+        element: <Navigate to="/login" replace />,
       },
-      {
-        path: 'home',
-        element: <Home />,
-        meta: {
-          auth: ['admin', 'user'],
-        },
-      },
-      {
-        path: 'contact/:userId',
-        element: <Contact />,
-        meta: {
-          auth: ['admin'],
-        },
-      },
-    ],
-  },
-  {
-    path: '*',
-    element: <NotFound />,
-  },
-]
+    ])
+  }
 
-const router = createHashRouter(routes)
+  // Filter protected routes based on user role
+  const filteredProtectedRoutes = filterRouteObject(protectedRoutes, role)
 
-export default router
+  return createBrowserRouter([...filteredProtectedRoutes, ...publicRoutes])
+}
+
+export default createRouter

@@ -15,10 +15,12 @@ const Login: React.FC = () => {
 
   const handleSubmit = async (values: LoginForm) => {
     try {
-      // TODO: Replace with your actual login API call
-      console.log('Login values:', values)
+      // Your login API call here
+      localStorage.setItem('token', 'your-token')
+      localStorage.setItem('role', values.role)
       message.success('Login successful!')
-      // Add your navigation logic here
+      // Force router refresh
+      window.location.href = '/home'
     } catch (error) {
       message.error(error instanceof Error ? error.message : 'An error occurred')
     }

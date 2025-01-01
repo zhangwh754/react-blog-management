@@ -1,10 +1,15 @@
 import React from 'react'
 import { RouterProvider } from 'react-router-dom'
 
-import router from './router'
+import createRouter from './router'
 
 const App: React.FC = () => {
-  return <RouterProvider router={router} fallbackElement={<div>Loading...</div>} />
+  const isAuthenticated = localStorage.getItem('token') !== null
+  const userRole = localStorage.getItem('role') as 'admin' | 'user'
+
+  const router = createRouter(isAuthenticated, userRole)
+
+  return <RouterProvider router={router} />
 }
 
 export default App
