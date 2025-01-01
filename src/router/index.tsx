@@ -6,14 +6,14 @@ import Home from '../views/Home'
 import Login from '../views/Login'
 import NotFound from '../views/NotFound'
 
-type CustomRouteObject = RouteObject & {
+export type CustomRouteObject = RouteObject & {
   meta?: {
     [key: string]: any
   }
   children?: CustomRouteObject[]
 }
 
-const routes: CustomRouteObject[] = [
+export const routes: CustomRouteObject[] = [
   {
     path: '/login',
     element: <Login />,
@@ -21,20 +21,24 @@ const routes: CustomRouteObject[] = [
   {
     path: '/',
     element: <AppLayout />,
-
     children: [
       {
         path: '',
         element: <Navigate to={'/home'} />,
-        meta: {},
       },
       {
         path: 'home',
         element: <Home />,
+        meta: {
+          auth: ['admin', 'user'],
+        },
       },
       {
         path: 'contact/:userId',
         element: <Contact />,
+        meta: {
+          auth: ['admin'],
+        },
       },
     ],
   },
