@@ -19,15 +19,15 @@ export default function filterRouteObject(routeConfig: CustomRouteObject[], role
         isPassed = hasRoleAccess(role, route.meta.auth)
       }
 
-      if (isPassed && route.children) {
-        const filteredChildren = filterRouteObject(route.children, role)
-
-        route.children = filteredChildren
-      }
-
       return isPassed
     })
-    .map(({ meta: _meta, ...route }) => route)
+    .map(({ meta: _meta, ...route }) => {
+      const menu = route
+
+      if (menu.children) menu.children = filterRouteObject(menu.children, role)
+
+      return menu
+    })
 
   return result
 }
